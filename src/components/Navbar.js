@@ -1,7 +1,7 @@
 import { Link, withRouter } from "react-router-dom";
-import { isAuthenticated, signout } from "../auth/helper";
+import { isAuthenticated } from "../auth/helper";
 
-const Navbar = ({ history }) => {
+const Navbar = () => {
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -39,7 +39,7 @@ const Navbar = ({ history }) => {
 
               {isAuthenticated() && (
                 <li className="nav-item">
-                  <Link to="/dashboard">
+                  <Link to="/profile">
                     <button
                       style={{
                         borderRadius: "50%",

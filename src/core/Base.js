@@ -14,7 +14,7 @@ const Base = ({ title, children }) => {
       <div className="container-fluid	">
         <div className="row">{children}</div>
         <div style={footerCss}>
-          <p class="text-center">Copyright © 2021 - InfySys</p>
+          <p className="text-center">Copyright © 2021 - InfySys</p>
         </div>
       </div>
     </>
