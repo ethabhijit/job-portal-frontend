@@ -1,4 +1,5 @@
 import { BrowserRouter, Switch, Route } from "react-router-dom";
+import AddCandidate from "./admin/AddCandidate";
 import CandidateList from "./admin/CandidateList";
 import JobList from "./admin/JobList";
 import PartnerList from "./admin/PartnerList";
@@ -19,6 +20,7 @@ const Routes = () => {
         <Route path="/partner/register/" exact component={PartnerSignup} />
         <PrivateRoute path="/dashboard" component={Dashboard} />
         <PrivateRoute path="/profile" component={Profile} />
+        <PrivateRoute path="/add/candidate" component={AddCandidate} />
         <AdminRoute path="/job/lists" component={JobList} />
         <AdminRoute path="/partner/lists" component={PartnerList} />
         <AdminRoute path="/candidate/lists" component={CandidateList} />

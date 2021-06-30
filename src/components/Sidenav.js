@@ -41,6 +41,12 @@ const Sidenav = () => {
             >
               Candidate Lists
             </Link>
+            <Link
+              className="list-group-item list-group-item-action"
+              to="/add/candidate"
+            >
+              Add Candidates
+            </Link>
           </>
         )}
       </ul>
