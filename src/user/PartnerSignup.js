@@ -7,22 +7,30 @@ const PartnerSignup = () => {
   const [values, setValues] = useState({
     name: "",
     email: "",
+    phone: "",
+    role: 0,
     password: "",
     error: "",
     loading: false,
     success: false,
   });
 
-  const { name, email, password, error, loading, success } = values;
+  const { name, email, role, phone, password, error, loading, success } =
+    values;
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, error: false, [name]: event.target.value });
   };
 
+  // String capitalize function
+  String.prototype.capitalize = function () {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+  };
+
   const onSubmit = (event) => {
     event.preventDefault();
     setValues({ ...values, error: false, loading: true });
-    signup({ name, email, password })
+    signup({ name, email, role, phone, password })
       .then((data) => {
         if (data.error) {
           setValues({ ...values, error: data.error, success: false });
@@ -31,6 +39,8 @@ const PartnerSignup = () => {
             ...values,
             name: "",
             email: "",
+            phone: "",
+            role: 0,
             password: "",
             error: "",
             loading: false,
@@ -73,7 +83,7 @@ const PartnerSignup = () => {
         </div>
         <div className="row justify-content-center">
           <div className="col-md-4 col-sm-6 card p-3">
-            <p className="h4 text-center mt-3 mb-3">Partner Registration</p>
+            <p className="h4 text-center mt-3 mb-3">Register</p>
             <div className="mb-3">
               <label for="nameInput" className="form-label">
                 Name
@@ -101,6 +111,19 @@ const PartnerSignup = () => {
             </div>
 
             <div className="mb-3">
+              <label for="phoneInput" className="form-label">
+                Mobile
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="phoneInput"
+                onChange={handleChange("phone")}
+                value={phone}
+              />
+            </div>
+
+            <div className="mb-3">
               <label for="passwordInput" className="form-label">
                 Password
               </label>
@@ -112,6 +135,25 @@ const PartnerSignup = () => {
                 value={password}
               />
             </div>
+
+            <div className="d-flex justify-content-center mb-2">
+              {["user", "partner"].map((item, index) => (
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="role"
+                    value={item === "user" ? 0 : 2}
+                    onChange={handleChange("role")}
+                    id={item}
+                  />
+                  <label className="form-check-label" htmlFor={item}>
+                    {item.capitalize()}
+                  </label>
+                </div>
+              ))}
+            </div>
+
             <button
               className="btn btn-primary mb-3"
               type="button"

@@ -1,66 +1,207 @@
 import { useState } from "react";
+import { isAuthenticated } from "../auth/helper";
+import { successMessage } from "../components/CustomAlert";
+import Sidenav from "../components/Sidenav";
 import Base from "../core/Base";
+import { createCandidate } from "./helper/candidateapicalls";
 
 const AddCandidate = () => {
-  const [inputCount, setInputCount] = useState(1);
+  const inputTemplate = {
+    skill: "",
+    email: "",
+    phone: "",
+    cv: "",
+    formData: new FormData(),
+  };
+  const [inputFields, setInputFields] = useState([inputTemplate]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const { user, token } = isAuthenticated();
+  const fd = new FormData();
+
+  const handleAddFields = () => {
+    const values = [...inputFields];
+    values.push(inputTemplate);
+    setInputFields(values);
+  };
+
+  const handleRemoveFields = () => {
+    const values = [...inputFields];
+    values.splice(values.length - 1, 1);
+    setInputFields(values);
+  };
+
+  const handleInputChange = (index, event, key) => {
+    const values = [...inputFields];
+    const val = key === "cv" ? event.target.files[0] : event.target.value;
+
+    values[index][key] = val;
+    values[index].formData.set(key, val);
+
+    setInputFields(values);
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    console.log("inputFields", inputFields);
+    createCandidate(user._id, token, inputFields)
+      .then((data) => {
+        if (data?.error) {
+          setError(data.error);
+          setSuccess(false);
+          setLoading(false);
+        } else {
+          setError("");
+          setSuccess(true);
+          setLoading(false);
+        }
+      })
+      .catch(console.log("Not able to upload candidates"));
+  };
 
   return (
     <Base>
       <div className="container mt-5">
-        <div className="row justify-content-center">
-          <div className="col-md-7 mb-3">
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title mb-4">
-                  Add Candidates Manually
-                  <span style={{ float: "right" }}>
-                    <div className="btn-group" role="group">
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={() => setInputCount(inputCount + 1)}
-                      >
-                        +
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={() => setInputCount(inputCount - 1)}
-                      >
-                        -
-                      </button>
-                    </div>
-                  </span>
-                </h5>
+        <div className="row">
+          <Sidenav />
 
-                {Array(inputCount)
-                  .fill(0)
-                  .map((elem, index) => (
-                    <div className="input-group mt-3" key={index}>
-                      <span className="input-group-text">Name</span>
-                      <input type="text" className="form-control" />
-                      <span className="input-group-text">Email</span>
-                      <input type="text" className="form-control" />
-                      <span className="input-group-text">Phone</span>
-                      <input type="text" className="form-control" />
+          <div className="col-lg-9 col-md-8">
+            <div className="row justify-content-center">
+              <div className="col-md-12 mb-3">
+                <div
+                  className="card bg-light"
+                  style={{ height: "330px", overflowY: "scroll" }}
+                >
+                  <div className="card-body">
+                    <h5 className="card-title mb-4">
+                      Add Candidates Manually
+                      <span style={{ float: "right" }}>
+                        <div className="btn-group" role="group">
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={() => handleAddFields()}
+                          >
+                            +
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={() => handleRemoveFields()}
+                          >
+                            -
+                          </button>
+                        </div>
+                      </span>
+                    </h5>
+                    {successMessage(success, "Added successfully")}
+
+                    {inputFields.map((inputField, index) => (
+                      <div
+                        className="input-group mt-3"
+                        key={`${inputField}~${index}`}
+                      >
+                        <span className="input-group-text">Skill</span>
+                        <input
+                          type="text"
+                          className="form-control"
+                          name="skill"
+                          value={inputField.skill}
+                          onChange={(event) =>
+                            handleInputChange(index, event, "skill")
+                          }
+                        />
+                        <span className="input-group-text">Email</span>
+                        <input
+                          type="email"
+                          className="form-control"
+                          name="email"
+                          value={inputField.email}
+                          onChange={(event) =>
+                            handleInputChange(index, event, "email")
+                          }
+                        />
+                        <span className="input-group-text">Phone</span>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={inputField.phone}
+                          onChange={(event) =>
+                            handleInputChange(index, event, "phone")
+                          }
+                        />
+                        <input
+                          type="file"
+                          className="form-control"
+                          name="cv"
+                          value={inputField.file}
+                          onChange={(event) =>
+                            handleInputChange(index, event, "cv")
+                          }
+                        />
+                      </div>
+                    ))}
+                    {/* <div className="mt-3 mb-3">
+                      <label htmlFor="formFile" className="form-label">
+                        Upload a zip file
+                      </label>
+                      <input
+                        className="form-control"
+                        type="file"
+                        id="formFile"
+                      />
+                    </div> */}
+                    <div className="d-grid gap-2 col-3">
+                      <button
+                        className="btn btn-primary mt-3"
+                        onClick={onSubmit}
+                        disabled={loading}
+                      >
+                        Submit
+                        {loading && (
+                          <div
+                            className="spinner-grow spinner-grow-sm ms-2"
+                            role="status"
+                          >
+                            <span className="visually-hidden">Loading...</span>
+                          </div>
+                        )}
+                      </button>
                     </div>
-                  ))}
-                <button className="btn btn-primary mt-3">Submit</button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <div className="col-md-5">
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title">Add Candidates Automatically</h5>
+              <div className="col-md-12 mb-3">
+                <div className="card bg-light">
+                  <div className="card-body">
+                    <h5 className="card-title">Add Candidates Automatically</h5>
 
-                <div className="mb-3">
-                  <label for="formFile" className="form-label">
-                    Upload a xlsx file
-                  </label>
-                  <input className="form-control" type="file" id="formFile" />
-                  <button className="btn btn-primary mt-3">Upload</button>
+                    <div className="mb-3">
+                      <label htmlFor="formFile" className="form-label">
+                        Upload a xlsx file
+                      </label>
+                      <input
+                        className="form-control"
+                        type="file"
+                        id="formFile"
+                      />
+                    </div>
+
+                    <div className="mb-3">
+                      <label htmlFor="formFile" className="form-label">
+                        Upload a zip file
+                      </label>
+                      <input
+                        className="form-control"
+                        type="file"
+                        id="formFile"
+                      />
+                    </div>
+                    <button className="btn btn-primary mt-3">Submit</button>
+                  </div>
                 </div>
               </div>
             </div>

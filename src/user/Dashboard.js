@@ -1,7 +1,31 @@
+import { useEffect, useState } from "react";
 import Base from "../core/Base";
 import Sidenav from "../components/Sidenav";
+import { getAllJobs } from "../admin/helper/adminapicalls";
+import { isAuthenticated } from "../auth/helper";
+import { errorMessage } from "../components/CustomAlert";
 
 const Dashboard = () => {
+  const [jobs, setJobs] = useState([]);
+  const [error, setError] = useState("");
+  const { user, token } = isAuthenticated();
+
+  useEffect(() => {
+    preload(user._id, token);
+  }, []);
+
+  const preload = (id, atoken) => {
+    getAllJobs(id, atoken)
+      .then((data) => {
+        if (data?.error) {
+          setError(data.error);
+        } else {
+          setJobs(data);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <Base>
       <div className="row justify-content-center mt-5">
@@ -10,34 +34,23 @@ const Dashboard = () => {
           <div className="card ">
             <div className="card-body bg-light">
               <h4 className="card-title">Jobs</h4>
+              {error && errorMessage(error)}
               <ul
                 className="list-group"
-                style={{ height: "400px", overflowY: "scroll" }}
+                style={{ height: "450px", overflowY: "scroll" }}
               >
-                {Array(20)
-                  .fill(0)
-                  .map((elem, index) => (
-                    <li
-                      className="list-group-item mt-3"
-                      key={index}
-                      style={{ borderTopWidth: "1px", borderRadius: "5px" }}
-                    >
-                      <p className="h6">React JS Developer</p>
-                      <p>Hyderabad, Telangana</p>
-                      <div className="d-grid gap-2 d-md-flex">
-                        <span className="badge bg-danger">Hot</span>
-                        <span className="badge bg-success">Urgent</span>
-                      </div>
+                {jobs && jobs.map((job, index) => (
+                  <li
+                    className="list-group-item mt-3"
+                    key={job._id}
+                    style={{ borderTopWidth: "1px", borderRadius: "5px" }}
+                  >
+                    <p className="h6">{job.title}</p>
 
-                      <p className="mt-3">
-                        We are looking for a skilled React.js Developer to join
-                        Pushpak’s Front-End development team. In this role, you
-                        will be responsible for developing and implementing user
-                        interface components using React.js concepts and
-                        workflows such as Redux, Flux, and Webpack.
-                      </p>
-                    </li>
-                  ))}
+                    <p>Skill: {job.skill}</p>
+                    <p>{job.noOfEmp} employee required</p>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>

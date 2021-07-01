@@ -1,8 +1,11 @@
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import AddCandidate from "./admin/AddCandidate";
+import AddJob from "./admin/AddJob";
 import CandidateList from "./admin/CandidateList";
 import JobList from "./admin/JobList";
 import PartnerList from "./admin/PartnerList";
+import UpdateJob from "./admin/UpdateJob";
+import UpdatePartner from "./admin/UpdatePartner";
 import AdminRoute from "./auth/helper/AdminRoutes";
 import PrivateRoute from "./auth/helper/PrivateRoutes";
 import Dashboard from "./user/Dashboard";
@@ -24,6 +27,9 @@ const Routes = () => {
         <AdminRoute path="/job/lists" component={JobList} />
         <AdminRoute path="/partner/lists" component={PartnerList} />
         <AdminRoute path="/candidate/lists" component={CandidateList} />
+        <AdminRoute path="/add/job" component={AddJob} />
+        <AdminRoute path="/update/job/:jobId" component={UpdateJob} />
+        <AdminRoute path="/update/partner/:partnerId" component={UpdatePartner} />
       </Switch>
     </BrowserRouter>
   );

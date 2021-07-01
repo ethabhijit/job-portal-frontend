@@ -21,7 +21,7 @@ const Home = () => {
               Login
             </Link>
             <Link to="/partner/register" className="btn btn btn-secondary">
-              Register as partner
+              Register
             </Link>
           </div>
         </div>

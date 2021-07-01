@@ -21,7 +21,7 @@ const Sidenav = () => {
             Profile
           </Link>
         )}
-        {user.role === 1 && (
+        {isAuthenticated() && user.role === 1 && (
           <>
             <Link
               className="list-group-item list-group-item-action"
@@ -46,6 +46,12 @@ const Sidenav = () => {
               to="/add/candidate"
             >
               Add Candidates
+            </Link>
+            <Link
+              className="list-group-item list-group-item-action"
+              to="/add/job"
+            >
+              Add Job
             </Link>
           </>
         )}
