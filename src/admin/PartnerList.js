@@ -72,6 +72,7 @@ const PartnerList = () => {
                 <thead>
                   <tr>
                     <th scope="col">#</th>
+                    <th scope="col">ID</th>
                     <th scope="col">Name</th>
                     <th scope="col">Email</th>
                     <th scope="col">Phone</th>
@@ -84,6 +85,7 @@ const PartnerList = () => {
                     partners.map((partner, index) => (
                       <tr key={partner._id}>
                         <th scope="row">{index + 1}</th>
+                        <td>{`P0000${index + 1}`}</td>
                         <td>{partner.name}</td>
                         <td>{partner.email}</td>
                         <td>{partner.phone}</td>

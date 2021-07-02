@@ -7,10 +7,9 @@ export const createJob = (adminId, token, reqBody) => {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(reqBody),
+    body: reqBody,
   })
     .then((response) => {
       return response.json();

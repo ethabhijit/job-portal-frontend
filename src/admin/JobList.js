@@ -1,6 +1,7 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { API } from "../backend";
 import { isAuthenticated } from "../auth/helper";
 import { errorMessage } from "../components/CustomAlert";
 import Sidenav from "../components/Sidenav";
@@ -75,8 +76,8 @@ const JobList = () => {
                     <th scope="col">Job Title</th>
                     <th scope="col">Skill</th>
                     <th scope="col">No. Employee</th>
+                    <th scope="col">Last Seen</th>
                     <th scope="col">Created</th>
-                    <th scope="col">Updated</th>
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
@@ -88,8 +89,8 @@ const JobList = () => {
                         <td>{job.title}</td>
                         <td>{job.skill}</td>
                         <td>{job.noOfEmp}</td>
+                        <td>{job.lastSeen ? moment(job.lastSeen).format("DD/MM/YYYY hh:mm A") : "No Views"}</td>
                         <td>{moment(job.createdAt).format("DD/MM/YYYY")}</td>
-                        <td>{moment(job.updatedAt).format("DD/MM/YYYY")}</td>
                         <td>
                           <div className="d-grid gap-2 d-md-flex">
                             <Link
@@ -98,6 +99,12 @@ const JobList = () => {
                             >
                               Update
                             </Link>
+                            <a
+                              href={`${API}/job/doc/${job._id}`}
+                              className="btn btn-success btn-sm"
+                            >
+                              Download PDF
+                            </a>
                             <button
                               className="btn btn-danger btn-sm"
                               type="button"

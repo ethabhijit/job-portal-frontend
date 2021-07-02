@@ -4,6 +4,7 @@ import Sidenav from "../components/Sidenav";
 import { getAllJobs } from "../admin/helper/adminapicalls";
 import { isAuthenticated } from "../auth/helper";
 import { errorMessage } from "../components/CustomAlert";
+import { API } from "../backend";
 
 const Dashboard = () => {
   const [jobs, setJobs] = useState([]);
@@ -62,6 +63,12 @@ const Dashboard = () => {
 
                       <p>Skill: {job.skill}</p>
                       <p>{job.noOfEmp} employee required</p>
+                      <a
+                        href={`${API}/job/doc/view/${job._id}`}
+                        className="btn btn-success btn-sm"
+                      >
+                        View Reference JD
+                      </a>
                     </li>
                   ))}
               </ul>

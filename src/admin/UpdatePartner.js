@@ -25,6 +25,10 @@ const UpdatePartner = ({ match }) => {
     setValues({ ...values, error: false, [name]: event.target.value });
   };
 
+  String.prototype.capitalize = function () {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+  };
+
   const onSubmit = (event) => {
     event.preventDefault();
     setValues({ ...values, error: false, loading: true });

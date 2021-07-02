@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Link } from "react-router-dom";
 import Base from "../core/Base";
 import { isAuthenticated, signout } from "../auth/helper";
@@ -23,6 +24,10 @@ const Profile = ({ history }) => {
                   <tr>
                     <td>Email</td>
                     <td>{user.email}</td>
+                  </tr>
+                  <tr>
+                    <td>Last Login</td>
+                    <td>{moment(user.lastLogin).format("DD/MM/YYYY hh:mm A")}</td>
                   </tr>
                   <tr>
                     <td>Type</td>

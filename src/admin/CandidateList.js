@@ -97,6 +97,7 @@ const CandidateList = () => {
                             >
                               Download PDF
                             </a>
+                            
                             <button
                               className="btn btn-danger btn-sm"
                               type="button"
