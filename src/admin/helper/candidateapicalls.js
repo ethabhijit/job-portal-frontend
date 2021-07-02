@@ -19,6 +19,19 @@ export const createCandidate = async (adminId, token, reqBody) => {
   return data.json();
 };
 
+export const createCandidateForBulk = async (adminId, token, reqBody) => {
+  const data = await fetch(`${API}/add/candidates/bulk/${adminId}`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: reqBody,
+  });
+
+  return data.json();
+};
+
 //read
 export const getAllCandidates = (userId, token) => {
   return fetch(`${API}/candidates/${userId}`, {

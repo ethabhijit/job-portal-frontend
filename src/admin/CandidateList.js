@@ -10,6 +10,7 @@ import { getAllCandidates, deleteCandidate } from "./helper/candidateapicalls";
 const CandidateList = () => {
   const [candidates, setCandidate] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { user, token } = isAuthenticated();
 
   useEffect(() => {
@@ -17,24 +18,30 @@ const CandidateList = () => {
   }, []);
 
   const preload = (id, atoken) => {
+    setLoading(true);
     getAllCandidates(id, atoken)
       .then((data) => {
         if (data?.error) {
           setError(data.error);
+          setLoading(false);
         } else {
           setCandidate(data);
+          setLoading(false);
         }
       })
       .catch((err) => console.log(err));
   };
 
   const deleteCandidateById = (adminId, token, candidateId) => {
+    setLoading(true);
     deleteCandidate(adminId, token, candidateId)
       .then((data) => {
         if (data.error) {
           setError(data.error);
+          setLoading(false);
         } else {
           preload(user._id, token);
+          setLoading(false);
         }
       })
       .catch((error) => console.log(error));
@@ -48,6 +55,16 @@ const CandidateList = () => {
           <Sidenav />
 
           <div className="col-lg-9 col-md-8">
+            {/* Alert Message */}
+            {error && errorMessage(error)}
+            {loading && (
+              <div
+                className="spinner-border spinner-border-sm text-primary"
+                role="status"
+              >
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            )}
             <div
               className="table-responsive"
               style={{ height: "400px", overflowY: "scroll" }}
@@ -75,9 +92,7 @@ const CandidateList = () => {
                         <td>
                           <div className="d-grid gap-2 d-md-flex">
                             <a
-                              href={
-                                `${API}/candidate/cv/${candidate._id}`
-                              }
+                              href={`${API}/candidate/cv/${candidate._id}`}
                               className="btn btn-secondary btn-sm"
                             >
                               Download PDF

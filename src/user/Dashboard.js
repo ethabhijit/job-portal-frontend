@@ -8,6 +8,7 @@ import { errorMessage } from "../components/CustomAlert";
 const Dashboard = () => {
   const [jobs, setJobs] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { user, token } = isAuthenticated();
 
   useEffect(() => {
@@ -15,12 +16,15 @@ const Dashboard = () => {
   }, []);
 
   const preload = (id, atoken) => {
+    setLoading(true);
     getAllJobs(id, atoken)
       .then((data) => {
         if (data?.error) {
           setError(data.error);
+          setLoading(false);
         } else {
           setJobs(data);
+          setLoading(false);
         }
       })
       .catch((err) => console.log(err));
@@ -35,22 +39,31 @@ const Dashboard = () => {
             <div className="card-body bg-light">
               <h4 className="card-title">Jobs</h4>
               {error && errorMessage(error)}
+              {loading && (
+                <div
+                  className="spinner-border spinner-border-sm text-primary"
+                  role="status"
+                >
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              )}
               <ul
                 className="list-group"
                 style={{ height: "450px", overflowY: "scroll" }}
               >
-                {jobs && jobs.map((job, index) => (
-                  <li
-                    className="list-group-item mt-3"
-                    key={job._id}
-                    style={{ borderTopWidth: "1px", borderRadius: "5px" }}
-                  >
-                    <p className="h6">{job.title}</p>
+                {jobs &&
+                  jobs.map((job, index) => (
+                    <li
+                      className="list-group-item mt-3"
+                      key={job._id}
+                      style={{ borderTopWidth: "1px", borderRadius: "5px" }}
+                    >
+                      <p className="h6">{job.title}</p>
 
-                    <p>Skill: {job.skill}</p>
-                    <p>{job.noOfEmp} employee required</p>
-                  </li>
-                ))}
+                      <p>Skill: {job.skill}</p>
+                      <p>{job.noOfEmp} employee required</p>
+                    </li>
+                  ))}
               </ul>
             </div>
           </div>

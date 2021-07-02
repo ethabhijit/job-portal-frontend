@@ -10,6 +10,7 @@ import { deletePartner, getAllPartners } from "./helper/partnerapicalls";
 const PartnerList = () => {
   const [partners, setPartners] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { user, token } = isAuthenticated();
 
   useEffect(() => {
@@ -17,38 +18,52 @@ const PartnerList = () => {
   }, []);
 
   const preload = (id, atoken) => {
+    setLoading(true);
     getAllPartners(id, atoken)
       .then((data) => {
         if (data?.error) {
           setError(data.error);
+          setLoading(false);
         } else {
           setPartners(data);
+          setLoading(false);
         }
       })
       .catch((err) => console.log(err));
   };
 
   const deletePartnerById = (adminId, token, partnerId) => {
-  	deletePartner(adminId, token, partnerId)
-  		.then((data) => {
-  			if(data.error) {
+    setLoading(true);
+    deletePartner(adminId, token, partnerId)
+      .then((data) => {
+        if (data.error) {
           setError(data.error);
+          setLoading(false);
         } else {
           preload(user._id, token);
+          setLoading(false);
         }
-  		})
-  		.catch((error) => console.log(error));
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
     <Base>
       <div className="container">
-        <p className="h4 text-center m-3">Partner Lists</p>
+        <p className="h4 text-center m-3">Partner Lists </p>
 
         <div className="row">
           <Sidenav />
           <div className="col-lg-9 col-md-8">
-          {error && errorMessage(error)}
+            {error && errorMessage(error)}
+            {loading && (
+              <div
+                className="spinner-border spinner-border-sm text-primary"
+                role="status"
+              >
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            )}
             <div
               className="table-responsive"
               style={{ height: "400px", overflowY: "scroll" }}
@@ -65,16 +80,19 @@ const PartnerList = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {partners && partners.map((partner, index) => (
+                  {partners &&
+                    partners.map((partner, index) => (
                       <tr key={partner._id}>
                         <th scope="row">{index + 1}</th>
                         <td>{partner.name}</td>
                         <td>{partner.email}</td>
                         <td>{partner.phone}</td>
-                        <td>{moment(partner.createdAt).format("DD/MM/YYYY")}</td>
+                        <td>
+                          {moment(partner.createdAt).format("DD/MM/YYYY")}
+                        </td>
                         <td>
                           <div className="d-grid gap-2 d-md-flex">
-                          <Link
+                            <Link
                               className="btn btn-secondary btn-sm"
                               to={`/update/partner/` + partner._id}
                             >
@@ -83,7 +101,9 @@ const PartnerList = () => {
                             <button
                               className="btn btn-danger btn-sm"
                               type="button"
-                              onClick={() => deletePartnerById(user._id, token, partner._id)}
+                              onClick={() =>
+                                deletePartnerById(user._id, token, partner._id)
+                              }
                             >
                               Delete
                             </button>

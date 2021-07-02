@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { isAuthenticated } from "../auth/helper";
-import { successMessage } from "../components/CustomAlert";
+import { successMessage, errorMessage } from "../components/CustomAlert";
 import Sidenav from "../components/Sidenav";
 import Base from "../core/Base";
-import { createCandidate } from "./helper/candidateapicalls";
+import {
+  createCandidate,
+  createCandidateForBulk,
+} from "./helper/candidateapicalls";
 
 const AddCandidate = () => {
   const inputTemplate = {
@@ -14,11 +17,18 @@ const AddCandidate = () => {
     formData: new FormData(),
   };
   const [inputFields, setInputFields] = useState([inputTemplate]);
+  const [inputFieldsForBulk, setInputFieldsForBulk] = useState({
+    xlsxFile: "",
+    zipFile: "",
+    errorForBulk: "",
+    loadingForBulk: false,
+    successForBulk: false,
+    formData: new FormData(),
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const { user, token } = isAuthenticated();
-  const fd = new FormData();
 
   const handleAddFields = () => {
     const values = [...inputFields];
@@ -42,10 +52,45 @@ const AddCandidate = () => {
     setInputFields(values);
   };
 
+  //for add candidate through xlsx and zip file
+  const handleChangeForBulk = (name) => (event) => {
+    const value = event.target.files[0];
+    inputFieldsForBulk.formData.set(name, value);
+    setInputFieldsForBulk({ ...inputFieldsForBulk, [name]: value });
+  };
+
+  const onSubmitForBulk = (e) => {
+    e.preventDefault();
+    setInputFieldsForBulk({
+      ...inputFieldsForBulk,
+      errorForBulk: "",
+      loadingForBulk: true,
+    });
+    console.log("inputFields", inputFieldsForBulk);
+    createCandidateForBulk(user._id, token, inputFieldsForBulk.formData)
+      .then((data) => {
+        if (data?.error) {
+          setInputFieldsForBulk({
+            ...inputFieldsForBulk,
+            errorForBulk: data.error,
+            loadingForBulk: false,
+            successForBulk: false,
+          });
+        } else {
+          setInputFieldsForBulk({
+            ...inputFieldsForBulk,
+            errorForBulk: "",
+            loadingForBulk: false,
+            successForBulk: true,
+          });
+        }
+      })
+      .catch(console.log("Not able to upload candidates"));
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log("inputFields", inputFields);
     createCandidate(user._id, token, inputFields)
       .then((data) => {
         if (data?.error) {
@@ -97,6 +142,7 @@ const AddCandidate = () => {
                       </span>
                     </h5>
                     {successMessage(success, "Added successfully")}
+                    {errorMessage(error)}
 
                     {inputFields.map((inputField, index) => (
                       <div
@@ -179,6 +225,12 @@ const AddCandidate = () => {
                   <div className="card-body">
                     <h5 className="card-title">Add Candidates Automatically</h5>
 
+                    {successMessage(
+                      inputFieldsForBulk.successForBulk,
+                      "Added successfully"
+                    )}
+                    {errorMessage(inputFieldsForBulk.errorForBulk)}
+
                     <div className="mb-3">
                       <label htmlFor="formFile" className="form-label">
                         Upload a xlsx file
@@ -187,6 +239,8 @@ const AddCandidate = () => {
                         className="form-control"
                         type="file"
                         id="formFile"
+                        name="xlsxFile"
+                        onChange={handleChangeForBulk("xlsxFile")}
                       />
                     </div>
 
@@ -198,9 +252,27 @@ const AddCandidate = () => {
                         className="form-control"
                         type="file"
                         id="formFile"
+                        name="zipFile"
+                        onChange={handleChangeForBulk("zipFile")}
                       />
                     </div>
-                    <button className="btn btn-primary mt-3">Submit</button>
+                    <div className="d-grid gap-2 col-3">
+                      <button
+                        className="btn btn-primary mt-3"
+                        onClick={onSubmitForBulk}
+                        disabled={inputFieldsForBulk.loadingForBulk}
+                      >
+                        Submit
+                        {inputFieldsForBulk.loadingForBulk && (
+                          <div
+                            className="spinner-grow spinner-grow-sm ms-2"
+                            role="status"
+                          >
+                            <span className="visually-hidden">Loading...</span>
+                          </div>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

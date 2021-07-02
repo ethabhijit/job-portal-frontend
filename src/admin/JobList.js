@@ -10,6 +10,7 @@ import { deleteJob, getAllJobs } from "./helper/adminapicalls";
 const JobList = () => {
   const [jobs, setJobs] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { user, token } = isAuthenticated();
 
   useEffect(() => {
@@ -17,27 +18,33 @@ const JobList = () => {
   }, []);
 
   const preload = (id, atoken) => {
+    setLoading(true);
     getAllJobs(id, atoken)
       .then((data) => {
         if (data?.error) {
           setError(data.error);
+          setLoading(false);
         } else {
           setJobs(data);
+          setLoading(false);
         }
       })
       .catch((err) => console.log(err));
   };
 
   const deleteJobById = (adminId, token, jobId) => {
-  	deleteJob(adminId, token, jobId)
-  		.then((data) => {
-  			if(data.error) {
+    setLoading(true);
+    deleteJob(adminId, token, jobId)
+      .then((data) => {
+        if (data.error) {
           setError(data.error);
+          setLoading(false);
         } else {
           preload(user._id, token);
+          setLoading(false);
         }
-  		})
-  		.catch((error) => console.log(error));
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -48,6 +55,15 @@ const JobList = () => {
           <Sidenav />
           <div className="col-lg-9 col-md-8">
             {error && errorMessage(error)}
+            {loading && (
+              <div
+                className="spinner-border spinner-border-sm text-primary"
+                role="status"
+              >
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            )}
+
             <div
               className="table-responsive"
               style={{ height: "400px", overflowY: "scroll" }}
@@ -65,7 +81,8 @@ const JobList = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {jobs && jobs.map((job, index) => (
+                  {jobs &&
+                    jobs.map((job, index) => (
                       <tr key={job._id}>
                         <th scope="row">{index + 1}</th>
                         <td>{job.title}</td>
@@ -84,7 +101,9 @@ const JobList = () => {
                             <button
                               className="btn btn-danger btn-sm"
                               type="button"
-                              onClick={() => deleteJobById(user._id, token, job._id)}
+                              onClick={() =>
+                                deleteJobById(user._id, token, job._id)
+                              }
                             >
                               Delete
                             </button>
