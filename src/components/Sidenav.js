@@ -21,6 +21,7 @@ const Sidenav = () => {
             Profile
           </Link>
         )}
+
         {isAuthenticated() && user.role === 1 && (
           <>
             <Link
@@ -31,9 +32,33 @@ const Sidenav = () => {
             </Link>
             <Link
               className="list-group-item list-group-item-action"
+              to="/add/job"
+            >
+              Add Job
+            </Link>
+            <Link
+              className="list-group-item list-group-item-action"
               to="/partner/lists"
             >
-              Partner Lists
+              Channel Partner Lists
+            </Link>
+            <Link
+              className="list-group-item list-group-item-action"
+              to="/add/partner"
+            >
+              Add  Channel Partners
+            </Link>
+            <Link
+              className="list-group-item list-group-item-action"
+              to="/sourcing-partner/lists"
+            >
+              Sourcing Partner Lists
+            </Link>
+            <Link
+              className="list-group-item list-group-item-action"
+              to="/add/sourcing-partner"
+            >
+              Add Sourcing Partners
             </Link>
             <Link
               className="list-group-item list-group-item-action"
@@ -41,19 +66,15 @@ const Sidenav = () => {
             >
               Candidate Lists
             </Link>
-            <Link
-              className="list-group-item list-group-item-action"
-              to="/add/candidate"
-            >
-              Add Candidates
-            </Link>
-            <Link
-              className="list-group-item list-group-item-action"
-              to="/add/job"
-            >
-              Add Job
-            </Link>
           </>
+        )}
+        {isAuthenticated() && user.role === 1 && (
+          <Link
+            className="list-group-item list-group-item-action"
+            to="/add/candidate"
+          >
+            Add Candidates
+          </Link>
         )}
       </ul>
     </div>

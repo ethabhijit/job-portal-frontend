@@ -5,9 +5,9 @@ import { isAuthenticated } from "../auth/helper";
 import { errorMessage } from "../components/CustomAlert";
 import Sidenav from "../components/Sidenav";
 import Base from "../core/Base";
-import { deletePartner, getAllChannelPartners } from "./helper/partnerapicalls";
+import { deletePartner, getAllSourcingPartners } from "./helper/partnerapicalls";
 
-const PartnerList = () => {
+const SourcingPartnerList = () => {
   const [partners, setPartners] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ const PartnerList = () => {
 
   const preload = (id, atoken) => {
     setLoading(true);
-    getAllChannelPartners(id, atoken)
+    getAllSourcingPartners(id, atoken)
       .then((data) => {
         if (data?.error) {
           setError(data.error);
@@ -50,7 +50,7 @@ const PartnerList = () => {
   return (
     <Base>
       <div className="container">
-        <p className="h4 text-center m-3">Channel Partner Lists </p>
+        <p className="h4 text-center m-3">Sourcing Partner Lists </p>
 
         <div className="row">
           <Sidenav />
@@ -86,7 +86,7 @@ const PartnerList = () => {
                     partners.map((partner, index) => (
                       <tr key={partner._id}>
                         <th scope="row">{index + 1}</th>
-                        <td>{`P0000${index + 1}`}</td>
+                        <td>{`S0000${index + 1}`}</td>
                         <td>{partner.name}</td>
                         <td>{partner.email}</td>
                         <td>{partner.phone}</td>
@@ -124,4 +124,4 @@ const PartnerList = () => {
   );
 };
 
-export default PartnerList;
+export default SourcingPartnerList;

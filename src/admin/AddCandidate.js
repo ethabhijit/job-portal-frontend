@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { isAuthenticated } from "../auth/helper";
+import { API } from "../backend";
 import { successMessage, errorMessage } from "../components/CustomAlert";
 import Sidenav from "../components/Sidenav";
 import Base from "../core/Base";
@@ -117,13 +118,13 @@ const AddCandidate = () => {
               <div className="col-md-12 mb-3">
                 <div
                   className="card bg-light"
-                  style={{ height: "330px", overflowY: "scroll" }}
+                  style={{ height: "300px", overflowY: "scroll" }}
                 >
                   <div className="card-body">
                     <h5 className="card-title mb-4">
                       Add Candidates Manually
                       <span style={{ float: "right" }}>
-                        <div className="btn-group" role="group">
+                        <div className="btn-group " role="group">
                           <button
                             type="button"
                             className="btn btn-primary"
@@ -146,7 +147,7 @@ const AddCandidate = () => {
 
                     {inputFields.map((inputField, index) => (
                       <div
-                        className="input-group mt-3"
+                        className="input-group  input-group-sm mt-3"
                         key={`${inputField}~${index}`}
                       >
                         <span className="input-group-text">Skill</span>
@@ -201,7 +202,7 @@ const AddCandidate = () => {
                     </div> */}
                     <div className="d-grid gap-2 col-3">
                       <button
-                        className="btn btn-primary mt-3"
+                        className="btn btn-primary btn-sm mt-3"
                         onClick={onSubmit}
                         disabled={loading}
                       >
@@ -220,62 +221,77 @@ const AddCandidate = () => {
                 </div>
               </div>
 
-              <div className="col-md-12 mb-3">
-                <div className="card bg-light">
-                  <div className="card-body">
-                    <h5 className="card-title">Add Candidates Automatically</h5>
+              {user.role === 1 && (
+                <div className="col-md-12 mb-3">
+                  <div className="card bg-light">
+                    <div className="card-body">
+                      <h5 className="card-title">
+                        Add Candidates Automatically
+                      </h5>
 
-                    {successMessage(
-                      inputFieldsForBulk.successForBulk,
-                      "Added successfully"
-                    )}
-                    {errorMessage(inputFieldsForBulk.errorForBulk)}
+                      {successMessage(
+                        inputFieldsForBulk.successForBulk,
+                        "Added successfully"
+                      )}
+                      {errorMessage(inputFieldsForBulk.errorForBulk)}
 
-                    <div className="mb-3">
-                      <label htmlFor="formFile" className="form-label">
-                        Upload a xlsx file
-                      </label>
-                      <input
-                        className="form-control"
-                        type="file"
-                        id="formFile"
-                        name="xlsxFile"
-                        onChange={handleChangeForBulk("xlsxFile")}
-                      />
-                    </div>
+                      <div className="mb-3">
+                        <label htmlFor="formFile" className="form-label">
+                          Upload a xlsx file
+                        </label>
+                        <input
+                          className="form-control form-control-sm"
+                          type="file"
+                          id="formFile"
+                          name="xlsxFile"
+                          onChange={handleChangeForBulk("xlsxFile")}
+                        />
+                      </div>
 
-                    <div className="mb-3">
-                      <label htmlFor="formFile" className="form-label">
-                        Upload a zip file
-                      </label>
-                      <input
-                        className="form-control"
-                        type="file"
-                        id="formFile"
-                        name="zipFile"
-                        onChange={handleChangeForBulk("zipFile")}
-                      />
-                    </div>
-                    <div className="d-grid gap-2 col-3">
-                      <button
-                        className="btn btn-primary mt-3"
-                        onClick={onSubmitForBulk}
-                        disabled={inputFieldsForBulk.loadingForBulk}
-                      >
-                        Submit
-                        {inputFieldsForBulk.loadingForBulk && (
-                          <div
-                            className="spinner-grow spinner-grow-sm ms-2"
-                            role="status"
-                          >
-                            <span className="visually-hidden">Loading...</span>
-                          </div>
-                        )}
-                      </button>
+                      <div className="mb-3">
+                        <label htmlFor="formFile" className="form-label">
+                          Upload a zip file
+                        </label>
+                        <input
+                          className="form-control form-control-sm"
+                          type="file"
+                          id="formFile"
+                          name="zipFile"
+                          onChange={handleChangeForBulk("zipFile")}
+                        />
+                      </div>
+
+                      <div className="d-grid gap-2 d-md-flex ">
+                        <button
+                          className="btn btn-primary btn-sm mt-3"
+                          onClick={onSubmitForBulk}
+                          disabled={inputFieldsForBulk.loadingForBulk}
+                          style={{ width: "166px"}}
+                        >
+                          Submit
+                          {inputFieldsForBulk.loadingForBulk && (
+                            <div
+                              className="spinner-grow spinner-grow-sm ms-2"
+                              role="status"
+                            >
+                              <span className="visually-hidden">
+                                Loading...
+                              </span>
+                            </div>
+                          )}
+                        </button>
+
+                        <a
+                          className="btn btn-secondary btn-sm mt-3"
+                          href={`${API}/template/bulk_upload_candidate`}
+                        >
+                          Download Template
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

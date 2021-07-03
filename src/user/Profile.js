@@ -57,11 +57,6 @@ const Profile = ({ history }) => {
               </table>
               <div className="d-grid gap-2 d-md-flex">
                 {isAuthenticated() && (
-                  <Link className="btn btn-primary" to="/dashboard">
-                    Go to dashboard
-                  </Link>
-                )}
-                {isAuthenticated() && (
                   <button
                     className="btn btn-danger"
                     onClick={() => {

@@ -153,7 +153,7 @@ const AddJob = () => {
                           </label>
                           <input
                             type="text"
-                            className="form-control"
+                            className="form-control form-control-sm"
                             id="titleInput"
                             value={title}
                             onChange={handleChange("title")}
@@ -166,7 +166,7 @@ const AddJob = () => {
                           </label>
                           <input
                             type="number"
-                            className="form-control"
+                            className="form-control form-control-sm"
                             id="noOfEmpolyeInput"
                             value={noOfEmp}
                             onChange={handleChange("noOfEmp")}
@@ -179,7 +179,7 @@ const AddJob = () => {
                           </label>
                           <input
                             type="text"
-                            className="form-control"
+                            className="form-control form-control-sm"
                             id="skillInput"
                             value={skill}
                             onChange={handleChange("skill")}
@@ -195,7 +195,7 @@ const AddJob = () => {
                           </label>
                           <input
                             type="text"
-                            className="form-control"
+                            className="form-control form-control-sm"
                             id="durationOfContractInput"
                             value={durationOfContract}
                             onChange={handleChange("durationOfContract")}
@@ -208,7 +208,7 @@ const AddJob = () => {
                           </label>
                           <input
                             type="text"
-                            className="form-control"
+                            className="form-control form-control-sm"
                             id="remarksInput"
                             value={remarks}
                             onChange={handleChange("remarks")}
@@ -221,7 +221,7 @@ const AddJob = () => {
                           </label>
                           <input
                             type="text"
-                            className="form-control"
+                            className="form-control form-control-sm"
                             id="domainInput"
                             value={domain}
                             onChange={handleChange("domain")}
@@ -262,7 +262,7 @@ const AddJob = () => {
                           </label>
                           <input
                             type="text"
-                            className="form-control"
+                            className="form-control form-control-sm"
                             id="diversityPreferrenceInput"
                             value={diversityPreferrence}
                             onChange={handleChange("diversityPreferrence")}
@@ -275,7 +275,7 @@ const AddJob = () => {
                           </label>
                           <input
                             type="text"
-                            className="form-control"
+                            className="form-control form-control-sm"
                             id="expectedDojInput"
                             value={expectedDoj}
                             onChange={handleChange("expectedDoj")}
@@ -293,7 +293,7 @@ const AddJob = () => {
                           </label>
                           <input
                             type="text"
-                            className="form-control"
+                            className="form-control form-control-sm"
                             id="sourcingPartnerInput"
                             value={sourcingPartner}
                             onChange={handleChange("sourcingPartner")}
@@ -306,7 +306,7 @@ const AddJob = () => {
                           </label>
                           <input
                             type="text"
-                            className="form-control"
+                            className="form-control form-control-sm"
                             id="locationInput"
                             value={location}
                             onChange={handleChange("location")}
@@ -367,7 +367,7 @@ const AddJob = () => {
                           </label>
                           <input
                             type="file"
-                            className="form-control"
+                            className="form-control form-control-sm"
                             id="refJdInput"
                             name="refJd"
                             onChange={handleChange("refJd")}
@@ -380,7 +380,7 @@ const AddJob = () => {
                           </label>
                           <input
                             type="text"
-                            className="form-control"
+                            className="form-control form-control-sm"
                             id="minEducationInput"
                             value={minEducation}
                             onChange={handleChange("minEducation")}
@@ -393,7 +393,7 @@ const AddJob = () => {
                           </label>
                           <input
                             type="text"
-                            className="form-control"
+                            className="form-control form-control-sm"
                             id="maxSalaryInput"
                             value={maxSalary}
                             onChange={handleChange("maxSalary")}
@@ -403,12 +403,12 @@ const AddJob = () => {
                         <div className="mb-3">
                           <label class="form-label">WFH/remote?</label>
                           <div>
-                            {["Yes", "No"].map((item, index) => (
+                            {["Yes", "No", "Both"].map((item, index) => (
                               <div class="form-check form-check-inline">
                                 <input
                                   class="form-check-input"
                                   type="radio"
-                                  value={item === "Yes" ? true : false}
+                                  value={item === "No" ? false : true}
                                   onChange={handleChange("isRemoteJob")}
                                   name="isWorkFromHome"
                                   id={item}
@@ -425,7 +425,7 @@ const AddJob = () => {
 
                     <div className="d-grid col-3 gap-2">
                       <button
-                        className="btn btn-primary mt-3"
+                        className="btn btn-primary btn-sm mt-3"
                         onClick={onSubmit}
                         disabled={loading}
                       >

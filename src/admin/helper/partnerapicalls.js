@@ -2,15 +2,29 @@ import { API } from "../../backend";
 
 //PARTNER
 //create
-export const createPartner = (adminId, token, reqBody) => {
-  return fetch(`${API}/create/partner/${adminId}`, {
+export const createPartnerInBulk = (adminId, token, reqBody) => {
+  return fetch(`${API}/create/channel-partners/bulk/${adminId}`, {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(reqBody),
+    body: reqBody,
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => console.log(err));
+};
+
+export const createSourcingPartnerInBulk = (adminId, token, reqBody) => {
+  return fetch(`${API}/create/sourcing-partners/bulk/${adminId}`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: reqBody,
   })
     .then((response) => {
       return response.json();
@@ -19,8 +33,23 @@ export const createPartner = (adminId, token, reqBody) => {
 };
 
 //read
-export const getAllPartners = (userId, token) => {
-  return fetch(`${API}/partners/${userId}`, {
+export const getAllChannelPartners = (userId, token) => {
+  return fetch(`${API}/channel-partners/${userId}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => console.log(err));
+};
+
+export const getAllSourcingPartners = (userId, token) => {
+  return fetch(`${API}/sourcing-partners/${userId}`, {
     method: "GET",
     headers: {
       Accept: "application/json",

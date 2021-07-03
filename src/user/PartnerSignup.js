@@ -42,57 +42,120 @@ const PartnerSignup = () => {
     setValues({ ...values, error: false, [name]: event.target.value });
   };
 
-  // String capitalize function
+  //String capitalize function
   String.prototype.capitalize = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
   };
 
+  //Form validation client side
+  const validateForm = (obj) => {
+    const allLetters = /^[a-zA-Z]+$/;
+    const specialCharacters = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    const letter = /[a-zA-Z]/;
+    const number = /[0-9]/;
+    const mobileNumber = /^(\+\d{1,3}[- ]?)?\d{10}$/;
+    const url =
+      /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
+
+    const invalid = [];
+
+    if (!allLetters.test(obj.name)) {
+      invalid.push("*Name");
+    }
+
+    if (!mobileNumber.test(obj.phone)) {
+      invalid.push("*Phone");
+    }
+
+    if (!url.test(obj.website)) {
+      invalid.push("*Website");
+    }
+
+    if (
+      obj.email.indexOf("@") < 1 ||
+      obj.email.lastIndexOf(".") < email.indexOf("@") + 2 ||
+      obj.email.lastIndexOf(".") + 2 >= email.length
+    ) {
+      invalid.push("*Email");
+    }
+
+    if (
+      obj.password.length < 8 ||
+      !letter.test(password) ||
+      !number.test(password) ||
+      !specialCharacters.test(password)
+    ) {
+      invalid.push("*Password");
+    }
+
+    if (invalid.length != 0) {
+      const message = `Please fill the ${invalid.join(", ")} properly!`;
+      setValues({ ...values, error: message });
+      return false;
+    }
+
+    return true;
+  };
+
   const onSubmit = (event) => {
     event.preventDefault();
-    setValues({ ...values, error: false, loading: true });
 
-    const reqBody = {
-      name,
-      email,
-      role,
-      phone,
-      password,
-      location,
-      website,
-      contactPerson1: {
-        email: contactPerson1Email,
-        phone: contactPerson1Phone,
-      },
-      contactPerson2: {
-        email: contactPerson2Email,
-        phone: contactPerson2Phone,
-      },
-    };
-    signup(reqBody)
-      .then((data) => {
-        if (data.error) {
-          setValues({ ...values, error: data.error, success: false });
-        } else {
-          setValues({
-            ...values,
-            name: "",
-            email: "",
-            phone: "",
-            role: 0,
-            password: "",
-            location: "",
-            website: "",
-            contactPerson1Email: "",
-            contactPerson2Email: "",
-            contactPerson1Phone: "",
-            contactPerson2Phone: "",
-            error: "",
-            loading: false,
-            success: true,
-          });
-        }
+    if (
+      validateForm({
+        name,
+        email,
+        phone,
+        password,
+        website,
       })
-      .catch(console.log("Error in signup"));
+    ) {
+      setValues({ ...values, error: false, loading: true });
+
+      const reqBody = {
+        name,
+        email,
+        role,
+        phone,
+        password,
+        location,
+        website,
+        contactPerson1: {
+          email: contactPerson1Email,
+          phone: contactPerson1Phone,
+        },
+        contactPerson2: {
+          email: contactPerson2Email,
+          phone: contactPerson2Phone,
+        },
+      };
+      signup(reqBody)
+        .then((data) => {
+          if (data.error) {
+            setValues({ ...values, error: data.error, success: false });
+          } else {
+            setValues({
+              ...values,
+              name: "",
+              email: "",
+              phone: "",
+              role: 0,
+              password: "",
+              location: "",
+              website: "",
+              contactPerson1Email: "",
+              contactPerson2Email: "",
+              contactPerson1Phone: "",
+              contactPerson2Phone: "",
+              error: "",
+              loading: false,
+              success: true,
+            });
+          }
+        })
+        .catch(console.log("Error in signup"));
+    } else {
+      return;
+    }
   };
 
   const successMessage = () => {
