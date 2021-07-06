@@ -33,6 +33,20 @@ export const getAllJobs = (userId, token) => {
     .catch((err) => console.log(err));
 };
 
+export const getJobsForCarousel = () => {
+  return fetch(`${API}/hot-jobs/`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => console.log(err));
+};
+
 export const getAJob = (userId, token, jobId) => {
   return fetch(`${API}/jobs/${jobId}/${userId}`, {
     method: "GET",
